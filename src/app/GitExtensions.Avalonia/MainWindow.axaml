@@ -59,13 +59,45 @@
                                         <TextBlock Text="{Binding Localization[OpeningRepository]}" HorizontalAlignment="Center" Margin="0,12" />
                                 </StackPanel>
 
-                                <StackPanel Grid.Row="1" IsVisible="{Binding HasRepository}" Spacing="10">
+                                <Grid Grid.Row="1" IsVisible="{Binding HasRepository}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
                                         <TextBlock Text="{Binding Localization[Repository]}" FontSize="28" FontWeight="SemiBold" />
-                                        <TextBlock Text="{Binding ActiveRepository.Path}" TextWrapping="Wrap" Opacity="0.75" />
-                                                                                <TextBlock Text="{Binding BranchSummary}" Margin="0,18,0,0" />
-                                                                                <TextBlock Text="{Binding RemotesSummary}" />
-                                        <TextBlock Text="{Binding ActiveRepository.WorkingTreeSummary}" />
-                                </StackPanel>
+                                        <TextBlock Grid.Row="1" Text="{Binding ActiveRepository.Path}" TextWrapping="Wrap" Opacity="0.75" />
+                                        <TextBlock Grid.Row="2" Text="{Binding BranchSummary}" Margin="0,18,0,0" />
+                                        <TextBlock Grid.Row="3" Text="{Binding RemotesSummary}" />
+                                        <TextBlock Grid.Row="4" Text="{Binding ActiveRepository.WorkingTreeSummary}" />
+
+                                        <Grid Grid.Row="5" Margin="0,16,0,0">
+                                                <StackPanel IsVisible="{Binding CommitList.IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <ProgressBar IsIndeterminate="True" Width="200" />
+                                                        <TextBlock Text="{Binding Localization[LoadingCommits]}" HorizontalAlignment="Center" Margin="0,10" />
+                                                </StackPanel>
+
+                                                <TextBlock IsVisible="{Binding CommitList.IsEmpty}" Text="{Binding Localization[NoCommits]}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.7" />
+
+                                                <StackPanel IsVisible="{Binding CommitList.HasCommitError}" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding CommitList.ErrorMessage}" TextWrapping="Wrap" />
+                                                        <Button Content="{Binding Localization[Retry]}" Command="{Binding CommitList.RetryCommand}" HorizontalAlignment="Center" />
+                                                </StackPanel>
+
+                                                                                                <ListBox IsVisible="{Binding CommitList.IsLoaded}" ItemsSource="{Binding CommitList.Commits}">
+                                                                                                                <ListBox.ItemsPanel>
+                                                                                                                                <ItemsPanelTemplate>
+                                                                                                                                                <VirtualizingStackPanel Orientation="Vertical" />
+                                                                                                                                </ItemsPanelTemplate>
+                                                                                                                </ListBox.ItemsPanel>
+                                                        <ListBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                                                                                                <Grid Height="28" ColumnDefinitions="88,150,160,*">
+                                                                                <TextBlock Text="{Binding ShortId}" FontFamily="monospace" />
+                                                                                <TextBlock Grid.Column="1" Text="{Binding Date}" />
+                                                                                <TextBlock Grid.Column="2" Text="{Binding Author}" TextTrimming="CharacterEllipsis" />
+                                                                                <TextBlock Grid.Column="3" Text="{Binding Subject}" TextTrimming="CharacterEllipsis" />
+                                                                        </Grid>
+                                                                </DataTemplate>
+                                                        </ListBox.ItemTemplate>
+                                                </ListBox>
+                                        </Grid>
+                                </Grid>
 
                                 <StackPanel Grid.Row="1" IsVisible="{Binding HasError}" Spacing="10" Margin="0,220,0,0">
                                         <TextBlock Text="{Binding Localization[UnableToOpenRepository]}" FontSize="20" FontWeight="SemiBold" />

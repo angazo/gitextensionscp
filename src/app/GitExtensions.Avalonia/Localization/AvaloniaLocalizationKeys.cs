@@ -8,8 +8,10 @@ internal static class AvaloniaLocalizationKeys
     public const string ChooseRecentRepository = "Choose a recent repository or browse for a folder.";
     public const string Close = "Close";
     public const string Error = "Error";
+    public const string LoadingCommits = "Loading commits...";
     public const string MaximizeOrRestore = "Maximize or restore";
     public const string Minimize = "Minimize";
+    public const string NoCommits = "No commits";
     public const string Ok = "OK";
     public const string OpenRepository = "Open repository";
     public const string RecentRepositories = "Recent repositories";
@@ -34,6 +36,8 @@ internal static class AvaloniaLocalizationKeys
         ["UnableToOpenRepository"] = UnableToOpenRepository,
         ["ChooseAnotherFolder"] = ChooseAnotherFolder,
         ["Error"] = Error,
+        ["LoadingCommits"] = LoadingCommits,
+        ["NoCommits"] = NoCommits,
         ["Ok"] = Ok,
         ["RepositoryInformation"] = RepositoryInformation,
         ["SelectFolder"] = SelectFolder,
@@ -47,8 +51,10 @@ internal static class AvaloniaLocalizationKeys
         [ChooseRecentRepository] = ChooseRecentRepository,
         [Close] = Close,
         [Error] = Error,
+        [LoadingCommits] = LoadingCommits,
         [MaximizeOrRestore] = MaximizeOrRestore,
         [Minimize] = Minimize,
+        [NoCommits] = NoCommits,
         [Ok] = Ok,
         [OpenRepository] = OpenRepository,
         [RecentRepositories] = RecentRepositories,
