@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../../src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj" />
+    <ProjectReference Include="../../../CommonTestUtils/CommonTestUtils.csproj" />
   </ItemGroup>
 </Project>

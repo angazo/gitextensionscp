@@ -14,13 +14,15 @@ internal sealed partial class RepositoryShellViewModel : ObservableObject
     private CancellationTokenSource? _openingCancellation;
     private string? _lastPath;
 
-    public RepositoryShellViewModel(RepositoryOpeningService openingService, AvaloniaLocalizationService localization)
+    public RepositoryShellViewModel(RepositoryOpeningService openingService, AvaloniaLocalizationService localization, CommitListViewModel commitList)
     {
         ArgumentNullException.ThrowIfNull(openingService);
         ArgumentNullException.ThrowIfNull(localization);
+        ArgumentNullException.ThrowIfNull(commitList);
 
         _openingService = openingService;
         _localization = localization;
+        CommitList = commitList;
         _localization.PropertyChanged += LocalizationPropertyChanged;
         StatusMessage = _localization.Resolve(AvaloniaLocalizationKeys.NoRepositoryOpen);
     }
@@ -28,6 +30,8 @@ internal sealed partial class RepositoryShellViewModel : ObservableObject
     private readonly RepositoryOpeningService _openingService;
 
     public AvaloniaLocalizationService Localization => _localization;
+
+    public CommitListViewModel CommitList { get; }
 
     public string BranchSummary => ActiveRepository is null
         ? string.Empty
@@ -72,6 +76,9 @@ internal sealed partial class RepositoryShellViewModel : ObservableObject
         OnPropertyChanged(nameof(HasRepository));
         OnPropertyChanged(nameof(BranchSummary));
         OnPropertyChanged(nameof(RemotesSummary));
+
+        // LoadAsync/StopAsync observe their own cancellation and errors, so firing them here is safe.
+        _ = value is not null ? CommitList.LoadAsync(value.Path) : CommitList.StopAsync();
     }
 
     private void LocalizationPropertyChanged(object? sender, PropertyChangedEventArgs e)

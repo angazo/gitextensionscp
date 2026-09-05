@@ -2,6 +2,9 @@ using Avalonia.Headless;
 using GitCommands;
 using GitExtUtils;
 using GitUI;
+using NUnit.Framework;
+
+[assembly: LevelOfParallelism(1)]
 
 namespace GitExtensions.Avalonia.Tests;
 

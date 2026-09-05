@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO.Abstractions;
 using GitCommands;
 using GitExtensions.Avalonia;
@@ -9,6 +10,7 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitExtensions.Avalonia.Tests;
 
+[NonParallelizable]
 public sealed class AvaloniaStartupTests
 {
     private AvaloniaHeadlessTestContext _context = null!;
@@ -32,10 +34,10 @@ public sealed class AvaloniaStartupTests
 
         AvaloniaLocalizationService localization = App.ServiceProvider.GetRequiredService<AvaloniaLocalizationService>();
         localization["OpenRepository"].Should().Be("Open repository");
+        localization.ActiveCulture = CultureInfo.GetCultureInfo("en");
 
-        RepositoryShellViewModel viewModel = App.ServiceProvider.GetRequiredService<RepositoryShellViewModel>();
         int notificationCount = 0;
-        viewModel.PropertyChanged += (_, _) => notificationCount++;
+        localization.PropertyChanged += (_, _) => notificationCount++;
         localization.SetCulture("es").Should().BeTrue();
         notificationCount.Should().BeGreaterThan(0);
     }

@@ -29,6 +29,9 @@ internal static class ServiceCollectionExtensions
         services.AddSingleton<IRepositoryFolderPicker>(sp =>
             new ProductionRepositoryFolderPicker(() => App.MainWindow));
         services.AddSingleton<RepositoryOpeningService>();
+        services.AddSingleton<IRevisionLogPort, GitRevisionLogPort>();
+        services.AddSingleton<CommitLogService>();
+        services.AddSingleton<CommitListViewModel>();
         services.AddSingleton<RepositoryShellViewModel>();
 
         return services;
