@@ -30,7 +30,7 @@ The migration is developed incrementally, phase by phase:
 | Phase | Description | Status |
 |-------|-------------|--------|
 | **0 — Foundations** | Decouple the core from WinForms and prove it builds and passes tests on Linux in CI | ✅ |
-| **1 — Walking skeleton** | A minimal Avalonia app that opens a repository | |
+| **1 — Walking skeleton** | Avalonia shell that opens repositories and displays a virtualized commit list | ✅ |
 | **2 — Vertical slice** | Commit graph and diff viewer (read-only browsing) | |
 | **3 — Write operations** | Commit, push/pull, branches, stash… | |
 | **4 — Platform & parity** | Localization, settings UI, packaging per OS | |

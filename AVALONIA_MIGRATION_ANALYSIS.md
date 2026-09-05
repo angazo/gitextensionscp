@@ -267,7 +267,7 @@ v7.2.0 (== master upstream hoy)
   `git fetch upstream` + push) y `avalonia/main`. Las ramas del upstream siguen accesibles vía
   el remoto `upstream` si hicieran falta.
 
-### 10.3 Faseado vigente y estado (revisado 2026-08-29)
+### 10.3 Faseado vigente y estado (revisado 2026-09-05)
 
 El trabajo se organiza con OpenSpec (un change = unidad pequeña, con propuesta y diseño
 aprobados antes de implementar y resultado verificable). Este es el faseado vigente:
@@ -276,11 +276,11 @@ aprobados antes de implementar y resultado verificable). Este es el faseado vige
   `Extensibility` sin tipos WinForms → 0.3 extracción de interops a `GitExtUtils.WinForms` →
   0.4 core en `net10.0` y tests de `GitCommands` en Linux. El 0.5 no se ejecuta como change
   independiente: los subsistemas sentenciados quedan fuera de la shell Avalonia.
-- **Fase 1 — Walking skeleton Avalonia: infraestructura completada, funcionalidad pendiente.**
+- **Fase 1 — Walking skeleton Avalonia: completada.**
   1.0 MSDI → 1.1a shell Avalonia mínima → 1.1b JTF sobre `AvaloniaSynchronizationContext` →
   1.1c DI y delegates de shell → 1.1d solución primaria y tests core sin WinForms → 1.2
-  abrir repositorio → 1.3 lista plana de commits virtualizada (sin grafo). El siguiente change
-  es 1.2.
+  abrir repositorio → 1.3 lista plana de commits virtualizada (sin grafo). El siguiente objetivo
+  es la Fase 2, empezando por el grafo del historial.
 - **Fase 2 — Vertical slice**: 2.1 grafo del RevisionGrid (`DrawingContext` sobre el modelo
   existente) → 2.2 refs/labels con hit-testing → 2.3 panel de ficheros → 2.4 diff viewer con
   AvaloniaEdit. *Hito: browse completo solo-lectura en Windows/Linux/macOS.*
@@ -439,12 +439,11 @@ aprobados antes de implementar y resultado verificable). Este es el faseado vige
   `GitCommands.Tests` pasa >90% de tests en Linux en CI. La app WinForms sigue compilando
   y pasando `eng/Verify.ps1` completo (15/15 suites). **Fase 0 completada.**
 
-### 10.8 Decisiones y resultado de la Fase 1 — Walking skeleton Avalonia (revisado 2026-08-29)
+### 10.8 Decisiones y resultado de la Fase 1 — Walking skeleton Avalonia (revisado 2026-09-05)
 
-La Fase 1 se descompuso y se implementó en seis changes de infraestructura antes de construir
-vistas con lógica real. El resultado es una shell Avalonia portable, con DI, threading y
-delegates de plataforma funcionales, preparada para 1.2. No se ha implementado todavía la
-apertura de repositorios ni la lista de commits.
+La Fase 1 se descompuso en changes de infraestructura y funcionalidad incremental. El resultado
+es una shell Avalonia portable, con DI, threading y delegates de plataforma funcionales, que ya
+abre repositorios y muestra una lista plana de commits virtualizada.
 
 #### Tecnologías adoptadas
 
@@ -492,10 +491,11 @@ dependencias:
 │     Primer "el core funciona bajo Avalonia".
 │     Depende de: 1.1c.
 │
-└─ 1.3 — Lista plana de commits
-      RevisionReader → lista virtualizada (DataGrid/TreeDataGrid con
+└─ 1.3 — Lista plana de commits ✅ (2026-09-05, PR #28)
+      RevisionReader → lista virtualizada (ListBox con
       VirtualizingStackPanel). Benchmark con repos grandes (100K+ commits)
-      para validar pipeline de lectura y virtualización.
+      para validar pipeline de lectura y virtualización. Validación manual completada
+      con repositorios de 100K y 160K commits y aperturas consecutivas.
       Depende de: 1.2.
 ```
 
@@ -507,8 +507,10 @@ dependencias:
 2. **Migración MSDI:** resuelta. Los registros usan `IServiceCollection`, las shells construyen
   un `IServiceProvider` y no queda `ServiceContainer` en el código de producto.
 
-3. **Virtualización con repos grandes:** sigue abierto y pertenece a 1.3. Se validará con
-  repositorios de 100K o más commits cuando exista la lista plana.
+3. **Virtualización con repos grandes:** resuelto para 1.3. La validación manual con repositorios
+  de 100K y 160K commits, incluyendo aperturas consecutivas, no reveló problemas de scroll,
+  virtualización ni threading. La verificación Linux completa queda como validación de CI/PR,
+  porque el entorno local incluye tests Windows-only.
 
 #### Lo que NO incluye la Fase 1
 
@@ -521,8 +523,8 @@ dependencias:
 | Localización | Fase 4 |
 | Empaquetado por SO | Fase 4 |
 
-Los únicos pendientes funcionales inmediatos de la Fase 1 son 1.2 y 1.3. El resto de las
-exclusiones anteriores son decisiones de alcance, no trabajo bloqueante de la shell.
+Los pendientes funcionales inmediatos de la Fase 1, 1.2 y 1.3, están completados. El resto de
+las exclusiones anteriores son decisiones de alcance, no trabajo bloqueante de la shell.
 
 ### 10.9 Registro de changes implementados (tabla viva)
 
@@ -542,22 +544,23 @@ exclusiones anteriores son decisiones de alcance, no trabajo bloqueante de la sh
 | `make-avalonia-solution-primary` | 1.1d | 2026-08-26 | `GitExtensions.slnx` = solución cross-platform primaria; CI simétrico Win/Linux; test infra del core sin WinForms (`SingleThreadSynchronizationContext`) | `solution-structure`, `continuous-integration`, `local-verification`, `cross-platform-core` |
 | `extract-localizationhelpers-linux-verification` | 1.1e | 2026-08-29 | Cálculo portable de fechas, tests `net10.0` y verificación Linux con Bash | `cross-platform-core`, `local-verification`, `continuous-integration` |
 | `open-repository-main-shell` | 1.2 | 2026-09-05 | Shell Avalonia IDE-like, apertura de repositorios, información Git básica y tests headless | `avalonia-di`, `avalonia-shell`, `avalonia-main-shell`, `avalonia-repository-opening`, `avalonia-headless-testing` |
+| `virtualized-commit-list` | 1.3 | 2026-09-05 | Lista plana de commits virtualizada con streaming por lotes, cancelación, estados de presentación y validación manual en repositorios grandes | `avalonia-commit-list`, `avalonia-shell` |
 | `migrate-avalonia-localization` | 1.1f | 2026-09-05 | Localización portable Avalonia con catálogos XLIFF embebidos, fallback, cultura observable y diálogos localizados | `avalonia-localization`, `avalonia-shell` |
 
-### 10.10 Backlog derivado de los NO GOALS
+### 10.10 Backlog derivado de los NO GOALS de `virtualized-commit-list`
 
-Los siguientes puntos no son funcionalidad de la shell Avalonia ni bloquean el siguiente change,
-pero sí merecen seguimiento en el milestone **Phase 1 Backlog**:
+Los siguientes puntos quedaron fuera del change archivado y tienen seguimiento en el milestone
+**Backlog** (milestone 4):
 
 | Issue | Motivo | Prioridad |
 |---|---|---|
-| No hay nuevos seguimientos | Los NO GOALS restantes de este change ya están cubiertos por el alcance de Fase 4: localización completa, plugins, herramientas de traducción y empaquetado | — |
+| #29 | Añadir grafo de commits y decoraciones de refs/labels, manteniendo la virtualización de historiales grandes | Fase 2 |
+| #30 | Añadir selección de commits y navegación a detalle y diff | Fase 2 |
+| #31 | Añadir filtrado del historial y selector de rama/ref, integrado con el streaming y la cancelación | Fase 2/3 |
 
-El resto de los NO GOALS ya tiene fase asignada y no debe abrir issues de Fase 0/1: grafo y
-RevisionGrid (Fase 2), diff viewer (Fase 2), operaciones de escritura (Fase 3), localización
-completa, plugins y empaquetado (Fase 4). La solución WinForms y sus tests se conservan como
-referencia, y los endurecimientos de CI (caché NuGet, SHA pinning y CI de macOS) quedan para
-una fase posterior.
+Estos seguimientos no bloquean el cierre de la Fase 1. La solución WinForms y sus tests se
+conservan como referencia, y los endurecimientos de CI (caché NuGet, SHA pinning y CI de macOS)
+quedan para una fase posterior.
 
 ### 10.11 Resultado de #19 — LocalizationHelpers portable (2026-08-29)
 
@@ -574,4 +577,4 @@ configuración, build, tests, resultados TRX y códigos de salida respecto al sc
 
 - El proyecto tiene una **separación core/UI mejor de lo habitual** en apps WinForms de esta edad: la lógica git (`GitCommands`) es portable casi tal cual, no depende de LibGit2 nativo (usa `git` CLI) y las librerías de infraestructura clave (VS-MEF, VS-Threading, Rx) son multiplataforma.
 - Aun así, **no existe un camino de "migración" barato**: la capa de presentación (≈70% del código) usa WinForms de forma profunda (owner-drawing, Win32, controles de terceros WinForms, traducción y theming acoplados a la jerarquía de controles) y se reescribe en Avalonia; la API pública de plugins ya fue desacoplada rompiendo compatibilidad.
-- La ruta adoptada es una **nueva shell Avalonia sobre el core portable**, con la solución WinForms como referencia funcional. La Fase 0 está completada y el change 1.2 ha validado la shell y la apertura de repositorios; el siguiente change es 1.3, la lista plana de commits virtualizada.
+- La ruta adoptada es una **nueva shell Avalonia sobre el core portable**, con la solución WinForms como referencia funcional. La Fase 0 y la Fase 1 están completadas: el change 1.2 validó la shell y la apertura de repositorios, y el change 1.3 añadió la lista plana de commits virtualizada. El siguiente objetivo es la Fase 2, empezando por el grafo del historial.
