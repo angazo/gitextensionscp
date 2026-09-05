@@ -30,7 +30,7 @@ proporcione la ventana principal de la shell IDE-like y el flujo de apertura de 
 #### Scenario: La shell principal reemplaza la ventana vacía
 - **WHEN** se inicia la aplicación Avalonia
 - **THEN** se muestra la composición principal con barra superior, rails laterales, área central y barra inferior
-- **AND** el área central puede alojar la vista de bienvenida o la vista del repositorio
+- **AND** el área central puede alojar la vista de bienvenida, la vista del repositorio o la lista de commits
 - **AND** la barra superior propia es el único chrome de ventana visible
 
 ### Requirement: Tema Fluent con claro/oscuro
