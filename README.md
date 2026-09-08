@@ -1,8 +1,10 @@
-![Git Extensions logo](setup/assets/Logo/git-extensions-logo.svg)
+<p align="center">
+  <img src="setup/assets/Logo/landras-logo-svg-128.svg" alt="Landras logo" />
+</p>
 
-# Git Extensions Cross Platform
+<h1 align="center">Landras — Cross-platform Git client</h1>
 
-**Git Extensions Cross Platform** is an independent fork of
+**Landras** is an independent cross-platform fork of
 [Git Extensions](https://github.com/gitextensions/gitextensions), the standalone Windows UI
 tool for managing git repositories.
 
